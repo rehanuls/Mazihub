@@ -96,6 +96,7 @@ checkBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 checkBox.Parent = frame
 Instance.new("UICorner", checkBox)
 
+-- Auto Collect Label
 local checkLabel = Instance.new("TextLabel")
 checkLabel.Size = UDim2.new(1, -60, 0, 24)
 checkLabel.Position = UDim2.new(0, 10, 0, 125)
@@ -115,6 +116,34 @@ checkMark.Visible = false
 checkMark.TextColor3 = Color3.fromRGB(0, 200, 0)
 checkMark.Parent = checkBox
 
+-- Auto Open Crate Checkbox
+local openBox = Instance.new("TextButton")
+openBox.Size = UDim2.fromOffset(24, 24)
+openBox.Position = UDim2.new(1, -34, 0, 155)
+openBox.Text = ""
+openBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+openBox.Parent = frame
+Instance.new("UICorner", openBox)
+
+local openLabel = Instance.new("TextLabel")
+openLabel.Size = UDim2.new(1, -60, 0, 24)
+openLabel.Position = UDim2.new(0, 10, 0, 155)
+openLabel.BackgroundTransparency = 1
+openLabel.Text = "Auto Open Crate"
+openLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+openLabel.TextScaled = true
+openLabel.TextXAlignment = Enum.TextXAlignment.Left
+openLabel.Parent = frame
+
+local openMark = Instance.new("TextLabel")
+openMark.Size = UDim2.new(1, 0, 1, 0)
+openMark.BackgroundTransparency = 1
+openMark.Text = "✓"
+openMark.TextScaled = true
+openMark.Visible = false
+openMark.TextColor3 = Color3.fromRGB(0, 200, 0)
+openMark.Parent = openBox
+
 -- Minimized Icon
 local mini = Instance.new("TextButton")
 mini.Size = UDim2.fromOffset(42, 42)
@@ -131,7 +160,7 @@ mini.TextColor3 = Color3.fromRGB(180, 180, 180)
 mini.Parent = gui
 Instance.new("UICorner", mini).CornerRadius = UDim.new(0, 10)
 
--- Checkbox toggle = START / STOP
+-- Auto Collect Toggle
 checkBox.MouseButton1Click:Connect(function()
 	local enabled = not checkMark.Visible
 	checkMark.Visible = enabled
@@ -145,6 +174,18 @@ checkBox.MouseButton1Click:Connect(function()
 		end
 	else
 		Controller.toggleAutoCollect(false)
+	end
+end)
+
+-- Auto Open Crate toggle
+openBox.MouseButton1Click:Connect(function()
+	local enabled = not openMark.Visible
+	openMark.Visible = enabled
+
+	if enabled then
+		Controller.toggleAutoOpen(true)
+	else
+		Controller.toggleAutoOpen(false)
 	end
 end)
 
