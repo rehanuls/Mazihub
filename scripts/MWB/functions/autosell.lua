@@ -1,8 +1,11 @@
 -- functions/autosell.lua
--- Autosell v1: sell all Backpack items safely
+-- Autosell v1 with stop notification
 
 local Autosell = {}
 local running = false
+
+-- Optional callback
+Autosell.onStopped = nil
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -17,7 +20,6 @@ local sellRemote = ReplicatedStorage
 local CHECK_INTERVAL = 1.5
 local SELL_COOLDOWN = 1.0
 
--- Count tools ONLY in Backpack
 local function getBackpackCount()
 	local backpack = player:FindFirstChild("Backpack")
 	if not backpack then return 0 end
@@ -31,7 +33,6 @@ local function getBackpackCount()
 	return count
 end
 
--- Detect equipped tool (safety net)
 local function hasEquippedTool()
 	local character = player.Character
 	if not character then return false end
@@ -44,32 +45,34 @@ local function hasEquippedTool()
 	return false
 end
 
+local function stopInternal(reason)
+	if not running then return end
+	running = false
+
+	if typeof(Autosell.onStopped) == "function" then
+		Autosell.onStopped(reason)
+	end
+end
+
 local function autosellLoop()
 	while running do
-		-- Safety: stop if player equips something
 		if hasEquippedTool() then
-			warn("[Autosell] Equipped item detected, stopping")
-			running = false
+			warn("[Autosell] Equipped item detected")
+			stopInternal("equipped")
 			return
 		end
 
 		local count = getBackpackCount()
-
-		-- Nothing to sell → stop
 		if count == 0 then
-			warn("[Autosell] Backpack empty, stopping")
-			running = false
+			warn("[Autosell] Backpack empty")
+			stopInternal("empty")
 			return
 		end
 
-		-- Sell once
 		sellRemote:FireServer()
-		warn("[Autosell] Sold items, count:", count)
+		warn("[Autosell] Sold items:", count)
 
-		-- Cooldown after sell
 		task.wait(SELL_COOLDOWN)
-
-		-- Re-check at a calm pace
 		task.wait(CHECK_INTERVAL)
 	end
 end
@@ -81,7 +84,7 @@ function Autosell.start()
 end
 
 function Autosell.stop()
-	running = false
+	stopInternal("manual")
 end
 
 return Autosell
