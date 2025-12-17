@@ -1,4 +1,7 @@
--- MWB Auto (checkbox-controlled) by Mazihub
+-- MWB Auto v1.5 by Mazihub
+
+-- Log
+warn("MWB_v1.5_running")
 
 -- Services
 local Players = game:GetService("Players")
