@@ -43,7 +43,7 @@ title.Parent = frame
 -- Minimize Button
 local minimize = Instance.new("TextButton")
 minimize.Size = UDim2.fromOffset(30, 30)
-minimize.Position = UDim2.new(1, -35, 0, 8)
+minimize.Position = UDim2.new(1, -70, 0, 8)
 minimize.Text = "-"
 minimize.TextScaled = true
 minimize.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
@@ -53,7 +53,7 @@ Instance.new("UICorner", minimize)
 -- Close Button (Kill Script)
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.fromOffset(30, 30)
-closeBtn.Position = UDim2.new(1, -70, 0, 8) -- left of minimize
+closeBtn.Position = UDim2.new(1, -35, 0, 8)
 closeBtn.Text = "×"
 closeBtn.TextScaled = true
 closeBtn.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
@@ -66,7 +66,7 @@ local delayLabel = Instance.new("TextLabel")
 delayLabel.Size = UDim2.new(1, -20, 0, 20)
 delayLabel.Position = UDim2.new(0, 10, 0, 50)
 delayLabel.BackgroundTransparency = 1
-delayLabel.Text = "Delay (in /s)"
+delayLabel.Text = "Delay /s"
 delayLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 delayLabel.TextScaled = true
 delayLabel.Parent = frame
