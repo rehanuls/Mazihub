@@ -47,16 +47,3 @@ return AutoOpenfunction AutoOpen.stop()
 end
 
 return AutoOpen
-
--- === TEST HARNESS (remove after testing) ===
-_G.MWB_AutoOpen = _G.MWB_AutoOpen or {}
-
-_G.MWB_AutoOpen.start = function()
-	AutoOpen.start()
-	warn("[TEST] AutoOpen started")
-end
-
-_G.MWB_AutoOpen.stop = function()
-	AutoOpen.stop()
-	warn("[TEST] AutoOpen stopped")
-end
