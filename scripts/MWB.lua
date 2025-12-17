@@ -1,0 +1,173 @@
+-- MWB Auto v1
+-- By mazihub
+-- Services
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
+
+-- Remote
+local remote = ReplicatedStorage.Remotes.Brainrot.CashCollectRequest
+
+-- Cleanup old GUI
+if player.PlayerGui:FindFirstChild("MWBAutoGUI") then
+	player.PlayerGui.MWBAutoGUI:Destroy()
+end
+
+-- ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "MWBAutoGUI"
+gui.ResetOnSpawn = false
+gui.Parent = player.PlayerGui
+
+-- Main Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.fromOffset(260, 260)
+frame.Position = UDim2.fromScale(0.5, 0.5) - UDim2.fromOffset(130, 130)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -40, 0, 40)
+title.Position = UDim2.new(0, 10, 0, 5)
+title.BackgroundTransparency = 1
+title.Text = "MWB Auto"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextScaled = true
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = frame
+
+-- Minimize Button
+local minimize = Instance.new("TextButton")
+minimize.Size = UDim2.fromOffset(30, 30)
+minimize.Position = UDim2.new(1, -35, 0, 8)
+minimize.Text = "-"
+minimize.TextScaled = true
+minimize.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+minimize.Parent = frame
+Instance.new("UICorner", minimize)
+
+-- Delay Label
+local delayLabel = Instance.new("TextLabel")
+delayLabel.Size = UDim2.new(1, -20, 0, 20)
+delayLabel.Position = UDim2.new(0, 10, 0, 50)
+delayLabel.BackgroundTransparency = 1
+delayLabel.Text = "Delay (in /s)"
+delayLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+delayLabel.TextScaled = true
+delayLabel.Parent = frame
+
+-- Delay Box
+local delayBox = Instance.new("TextBox")
+delayBox.Size = UDim2.new(1, -20, 0, 40)
+delayBox.Position = UDim2.new(0, 10, 0, 70)
+delayBox.Text = "0.2"
+delayBox.ClearTextOnFocus = false
+delayBox.TextScaled = true
+delayBox.Parent = frame
+
+-- Runs Label
+local runsLabel = Instance.new("TextLabel")
+runsLabel.Size = UDim2.new(1, -20, 0, 20)
+runsLabel.Position = UDim2.new(0, 10, 0, 115)
+runsLabel.BackgroundTransparency = 1
+runsLabel.Text = "Runs"
+runsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+runsLabel.TextScaled = true
+runsLabel.Parent = frame
+
+-- Runs Box
+local runsBox = Instance.new("TextBox")
+runsBox.Size = UDim2.new(1, -20, 0, 40)
+runsBox.Position = UDim2.new(0, 10, 0, 135)
+runsBox.Text = "1"
+runsBox.ClearTextOnFocus = false
+runsBox.TextScaled = true
+runsBox.Parent = frame
+
+-- Start Button
+local startBtn = Instance.new("TextButton")
+startBtn.Size = UDim2.new(0.5, -15, 0, 40)
+startBtn.Position = UDim2.new(0, 10, 0, 190)
+startBtn.Text = "START"
+startBtn.TextScaled = true
+startBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+startBtn.Parent = frame
+Instance.new("UICorner", startBtn)
+
+-- Stop Button
+local stopBtn = Instance.new("TextButton")
+stopBtn.Size = UDim2.new(0.5, -15, 0, 40)
+stopBtn.Position = UDim2.new(0.5, 5, 0, 190)
+stopBtn.Text = "STOP"
+stopBtn.TextScaled = true
+stopBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+stopBtn.Parent = frame
+Instance.new("UICorner", stopBtn)
+
+-- Mini Button (small executor-style icon)
+local mini = Instance.new("TextButton")
+mini.Size = UDim2.fromOffset(42, 42)
+mini.Position = UDim2.fromScale(0.1, 0.5)
+mini.Text = "MWB"
+mini.Font = Enum.Font.GothamBold
+mini.TextSize = 16
+mini.TextScaled = true
+mini.Visible = false
+mini.Active = true
+mini.Draggable = true
+mini.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+mini.TextColor3 = Color3.fromRGB(180, 180, 180)
+mini.Parent = gui
+
+local miniCorner = Instance.new("UICorner")
+miniCorner.CornerRadius = UDim.new(0, 10)
+miniCorner.Parent = mini
+
+-- Optional executor-style outline
+local stroke = Instance.new("UIStroke")
+stroke.Thickness = 2
+stroke.Color = Color3.fromRGB(80, 170, 255)
+stroke.Parent = mini
+
+-- Logic
+local running = false
+
+local function collect(delay, runs)
+	for r = 1, runs do
+		if not running then break end
+		for i = 1, 8 do
+			if not running then break end
+			remote:FireServer("Space" .. i)
+			task.wait(delay)
+		end
+	end
+	running = false
+end
+
+startBtn.MouseButton1Click:Connect(function()
+	if running then return end
+	local delay = tonumber(delayBox.Text)
+	local runs = tonumber(runsBox.Text)
+	if not delay or not runs then return end
+	running = true
+	task.spawn(collect, delay, runs)
+end)
+
+stopBtn.MouseButton1Click:Connect(function()
+	running = false
+end)
+
+minimize.MouseButton1Click:Connect(function()
+	frame.Visible = false
+	mini.Visible = true
+end)
+
+mini.MouseButton1Click:Connect(function()
+	mini.Visible = false
+	frame.Visible = true
+end)
