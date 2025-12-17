@@ -1,5 +1,5 @@
--- MWB Auto v1
--- By mazihub
+-- MWB Auto (infinite mode) by Mazihub
+
 -- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -21,13 +21,12 @@ gui.Parent = player.PlayerGui
 
 -- Main Frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.fromOffset(260, 260)
-frame.Position = UDim2.fromScale(0.5, 0.5) - UDim2.fromOffset(130, 130)
+frame.Size = UDim2.fromOffset(260, 230)
+frame.Position = UDim2.fromScale(0.5, 0.5) - UDim2.fromOffset(130, 115)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
-
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
 
 -- Title
@@ -70,46 +69,54 @@ delayBox.ClearTextOnFocus = false
 delayBox.TextScaled = true
 delayBox.Parent = frame
 
--- Runs Label
-local runsLabel = Instance.new("TextLabel")
-runsLabel.Size = UDim2.new(1, -20, 0, 20)
-runsLabel.Position = UDim2.new(0, 10, 0, 115)
-runsLabel.BackgroundTransparency = 1
-runsLabel.Text = "Runs"
-runsLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-runsLabel.TextScaled = true
-runsLabel.Parent = frame
+-- Checkbox (Run until stopped)
+local checkBox = Instance.new("TextButton")
+checkBox.Size = UDim2.fromOffset(24, 24)
+checkBox.Position = UDim2.new(0, 10, 0, 125)
+checkBox.Text = ""
+checkBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+checkBox.Parent = frame
+Instance.new("UICorner", checkBox)
 
--- Runs Box
-local runsBox = Instance.new("TextBox")
-runsBox.Size = UDim2.new(1, -20, 0, 40)
-runsBox.Position = UDim2.new(0, 10, 0, 135)
-runsBox.Text = "1"
-runsBox.ClearTextOnFocus = false
-runsBox.TextScaled = true
-runsBox.Parent = frame
+local checkLabel = Instance.new("TextLabel")
+checkLabel.Size = UDim2.new(1, -50, 0, 24)
+checkLabel.Position = UDim2.new(0, 44, 0, 125)
+checkLabel.BackgroundTransparency = 1
+checkLabel.Text = "Run until stopped"
+checkLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+checkLabel.TextScaled = true
+checkLabel.TextXAlignment = Enum.TextXAlignment.Left
+checkLabel.Parent = frame
 
--- Start Button
+local checkMark = Instance.new("TextLabel")
+checkMark.Size = UDim2.new(1, 0, 1, 0)
+checkMark.BackgroundTransparency = 1
+checkMark.Text = "✓"
+checkMark.TextScaled = true
+checkMark.Visible = false
+checkMark.TextColor3 = Color3.fromRGB(0, 200, 0)
+checkMark.Parent = checkBox
+
+-- Start / Stop Buttons
 local startBtn = Instance.new("TextButton")
 startBtn.Size = UDim2.new(0.5, -15, 0, 40)
-startBtn.Position = UDim2.new(0, 10, 0, 190)
+startBtn.Position = UDim2.new(0, 10, 0, 170)
 startBtn.Text = "START"
 startBtn.TextScaled = true
 startBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
 startBtn.Parent = frame
 Instance.new("UICorner", startBtn)
 
--- Stop Button
 local stopBtn = Instance.new("TextButton")
 stopBtn.Size = UDim2.new(0.5, -15, 0, 40)
-stopBtn.Position = UDim2.new(0.5, 5, 0, 190)
+stopBtn.Position = UDim2.new(0.5, 5, 0, 170)
 stopBtn.Text = "STOP"
 stopBtn.TextScaled = true
 stopBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
 stopBtn.Parent = frame
 Instance.new("UICorner", stopBtn)
 
--- Mini Button (small executor-style icon)
+-- Minimized Icon
 local mini = Instance.new("TextButton")
 mini.Size = UDim2.fromOffset(42, 42)
 mini.Position = UDim2.fromScale(0.1, 0.5)
@@ -123,45 +130,43 @@ mini.Draggable = true
 mini.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mini.TextColor3 = Color3.fromRGB(180, 180, 180)
 mini.Parent = gui
-
-local miniCorner = Instance.new("UICorner")
-miniCorner.CornerRadius = UDim.new(0, 10)
-miniCorner.Parent = mini
-
--- Optional executor-style outline
-local stroke = Instance.new("UIStroke")
-stroke.Thickness = 2
-stroke.Color = Color3.fromRGB(80, 170, 255)
-stroke.Parent = mini
+Instance.new("UICorner", mini).CornerRadius = UDim.new(0, 10)
 
 -- Logic
 local running = false
+local checked = false
 
-local function collect(delay, runs)
-	for r = 1, runs do
-		if not running then break end
+local function collect(delay)
+	while running do
 		for i = 1, 8 do
 			if not running then break end
 			remote:FireServer("Space" .. i)
 			task.wait(delay)
 		end
 	end
-	running = false
 end
 
-startBtn.MouseButton1Click:Connect(function()
-	if running then return end
-	local delay = tonumber(delayBox.Text)
-	local runs = tonumber(runsBox.Text)
-	if not delay or not runs then return end
-	running = true
-	task.spawn(collect, delay, runs)
+-- Checkbox toggle
+checkBox.MouseButton1Click:Connect(function()
+	checked = not checked
+	checkMark.Visible = checked
 end)
 
+-- Start
+startBtn.MouseButton1Click:Connect(function()
+	if running or not checked then return end
+	local delay = tonumber(delayBox.Text)
+	if not delay then return end
+	running = true
+	task.spawn(collect, delay)
+end)
+
+-- Stop
 stopBtn.MouseButton1Click:Connect(function()
 	running = false
 end)
 
+-- Minimize / Restore
 minimize.MouseButton1Click:Connect(function()
 	frame.Visible = false
 	mini.Visible = true
