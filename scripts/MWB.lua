@@ -1,4 +1,4 @@
--- MWB Auto (infinite mode) by Mazihub
+-- MWB Auto (checkbox-controlled) by Mazihub
 
 -- Services
 local Players = game:GetService("Players")
@@ -21,8 +21,8 @@ gui.Parent = player.PlayerGui
 
 -- Main Frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.fromOffset(260, 230)
-frame.Position = UDim2.fromScale(0.5, 0.5) - UDim2.fromOffset(130, 115)
+frame.Size = UDim2.fromOffset(260, 200)
+frame.Position = UDim2.fromScale(0.5, 0.5) - UDim2.fromOffset(130, 100)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.Active = true
 frame.Draggable = true
@@ -69,7 +69,7 @@ delayBox.ClearTextOnFocus = false
 delayBox.TextScaled = true
 delayBox.Parent = frame
 
--- Checkbox (Run until stopped)
+-- Auto Collect Checkbox
 local checkBox = Instance.new("TextButton")
 checkBox.Size = UDim2.fromOffset(24, 24)
 checkBox.Position = UDim2.new(0, 10, 0, 125)
@@ -82,7 +82,7 @@ local checkLabel = Instance.new("TextLabel")
 checkLabel.Size = UDim2.new(1, -50, 0, 24)
 checkLabel.Position = UDim2.new(0, 44, 0, 125)
 checkLabel.BackgroundTransparency = 1
-checkLabel.Text = "Run until stopped"
+checkLabel.Text = "Auto Collect"
 checkLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 checkLabel.TextScaled = true
 checkLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -96,25 +96,6 @@ checkMark.TextScaled = true
 checkMark.Visible = false
 checkMark.TextColor3 = Color3.fromRGB(0, 200, 0)
 checkMark.Parent = checkBox
-
--- Start / Stop Buttons
-local startBtn = Instance.new("TextButton")
-startBtn.Size = UDim2.new(0.5, -15, 0, 40)
-startBtn.Position = UDim2.new(0, 10, 0, 170)
-startBtn.Text = "START"
-startBtn.TextScaled = true
-startBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-startBtn.Parent = frame
-Instance.new("UICorner", startBtn)
-
-local stopBtn = Instance.new("TextButton")
-stopBtn.Size = UDim2.new(0.5, -15, 0, 40)
-stopBtn.Position = UDim2.new(0.5, 5, 0, 170)
-stopBtn.Text = "STOP"
-stopBtn.TextScaled = true
-stopBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
-stopBtn.Parent = frame
-Instance.new("UICorner", stopBtn)
 
 -- Minimized Icon
 local mini = Instance.new("TextButton")
@@ -134,7 +115,6 @@ Instance.new("UICorner", mini).CornerRadius = UDim.new(0, 10)
 
 -- Logic
 local running = false
-local checked = false
 
 local function collect(delay)
 	while running do
@@ -146,24 +126,20 @@ local function collect(delay)
 	end
 end
 
--- Checkbox toggle
+-- Checkbox toggle = START / STOP
 checkBox.MouseButton1Click:Connect(function()
-	checked = not checked
-	checkMark.Visible = checked
-end)
+	running = not running
+	checkMark.Visible = running
 
--- Start
-startBtn.MouseButton1Click:Connect(function()
-	if running or not checked then return end
-	local delay = tonumber(delayBox.Text)
-	if not delay then return end
-	running = true
-	task.spawn(collect, delay)
-end)
-
--- Stop
-stopBtn.MouseButton1Click:Connect(function()
-	running = false
+	if running then
+		local delay = tonumber(delayBox.Text)
+		if delay then
+			task.spawn(collect, delay)
+		else
+			running = false
+			checkMark.Visible = false
+		end
+	end
 end)
 
 -- Minimize / Restore
