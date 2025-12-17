@@ -34,7 +34,7 @@ Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
 
 -- Title
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -40, 0, 40)
+title.Size = UDim2.new(1, -20, 0, 40)
 title.Position = UDim2.new(0, 10, 0, 5)
 title.BackgroundTransparency = 1
 title.Text = "MWB Auto"
@@ -76,7 +76,7 @@ delayLabel.Parent = frame
 
 -- Delay Box
 local delayBox = Instance.new("TextBox")
-delayBox.Size = UDim2.new(1, -20, 0, 40)
+delayBox.Size = UDim2.new(0.5, -15, 0, 36)
 delayBox.Position = UDim2.new(0, 10, 0, 70)
 delayBox.Text = "0.2"
 delayBox.ClearTextOnFocus = false
