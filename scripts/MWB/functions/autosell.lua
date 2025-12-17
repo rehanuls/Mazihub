@@ -1,10 +1,10 @@
 -- functions/autosell.lua
--- Autosell v1 with stop notification
+-- Autosell v2: Sell all inventory via Sell.Inventory
 
 local Autosell = {}
 local running = false
 
--- Optional callback
+-- Optional callback: function(reason)
 Autosell.onStopped = nil
 
 local Players = game:GetService("Players")
@@ -12,14 +12,15 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 
-local sellRemote = ReplicatedStorage
+local sellInventoryRemote = ReplicatedStorage
 	:WaitForChild("Remotes")
 	:WaitForChild("Sell")
-	:WaitForChild("Brainrots")
+	:WaitForChild("Inventory")
 
 local CHECK_INTERVAL = 1.5
 local SELL_COOLDOWN = 1.0
 
+-- Count tools ONLY in Backpack
 local function getBackpackCount()
 	local backpack = player:FindFirstChild("Backpack")
 	if not backpack then return 0 end
@@ -33,6 +34,7 @@ local function getBackpackCount()
 	return count
 end
 
+-- Safety: detect equipped tool
 local function hasEquippedTool()
 	local character = player.Character
 	if not character then return false end
@@ -56,6 +58,7 @@ end
 
 local function autosellLoop()
 	while running do
+		-- Stop if player equips something
 		if hasEquippedTool() then
 			warn("[Autosell] Equipped item detected")
 			stopInternal("equipped")
@@ -63,15 +66,19 @@ local function autosellLoop()
 		end
 
 		local count = getBackpackCount()
+
+		-- Nothing to sell → stop
 		if count == 0 then
 			warn("[Autosell] Backpack empty")
 			stopInternal("empty")
 			return
 		end
 
-		sellRemote:FireServer()
-		warn("[Autosell] Sold items:", count)
+		-- Sell everything (NPC logic)
+		sellInventoryRemote:FireServer()
+		warn("[Autosell] Sell.Inventory fired, item count:", count)
 
+		-- Calm pacing
 		task.wait(SELL_COOLDOWN)
 		task.wait(CHECK_INTERVAL)
 	end
