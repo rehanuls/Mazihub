@@ -11,9 +11,6 @@ local Controller = loadstring(game:HttpGet(
 	"https://raw.githubusercontent.com/rehanuls/Mazihub/main/scripts/MWB/Connector/init.lua"
 ))()
 
--- Remote
-local remote = ReplicatedStorage.Remotes.Brainrot.CashCollectRequest
-
 -- Cleanup old GUI
 if player.PlayerGui:FindFirstChild("MWBAutoGUI") then
 	player.PlayerGui.MWBAutoGUI:Destroy()
