@@ -50,6 +50,17 @@ minimize.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 minimize.Parent = frame
 Instance.new("UICorner", minimize)
 
+-- Close Button (Kill Script)
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.fromOffset(30, 30)
+closeBtn.Position = UDim2.new(1, -70, 0, 8) -- left of minimize
+closeBtn.Text = "×"
+closeBtn.TextScaled = true
+closeBtn.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.Parent = frame
+Instance.new("UICorner", closeBtn)
+
 -- Delay Label
 local delayLabel = Instance.new("TextLabel")
 delayLabel.Size = UDim2.new(1, -20, 0, 20)
@@ -151,4 +162,14 @@ end)
 mini.MouseButton1Click:Connect(function()
 	mini.Visible = false
 	frame.Visible = true
+end)
+
+-- Close / Kill Script
+closeBtn.MouseButton1Click:Connect(function()
+	running = false
+
+	-- Clean up GUI
+	if gui then
+		gui:Destroy()
+	end
 end)
