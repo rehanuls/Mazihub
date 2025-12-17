@@ -1,5 +1,5 @@
 -- functions/autoopen_crate.lua
--- Handles auto opening crates logic ONLY
+-- Opens ready crates sequentially (UI-safe)
 
 local AutoOpen = {}
 local running = false
@@ -13,18 +13,22 @@ local remote = ReplicatedStorage
 
 local START_PLACE = 1
 local END_PLACE = 10
-local OPEN_DELAY = 0.2
+local OPEN_DELAY = 3 -- seconds (IMPORTANT for UI safety)
 
 local function openLoop()
 	while running do
 		for i = START_PLACE, END_PLACE do
 			if not running then return end
+
+			-- Try opening this place
 			remote:FireServer("Place" .. i)
+
+			-- Always wait to avoid stacked animations
 			task.wait(OPEN_DELAY)
 		end
 
-		-- Optional: wait before next full cycle
-		task.wait(0.5)
+		-- Optional pause before scanning again
+		task.wait(1)
 	end
 end
 
@@ -35,6 +39,10 @@ function AutoOpen.start()
 end
 
 function AutoOpen.stop()
+	running = false
+end
+
+return AutoOpenfunction AutoOpen.stop()
 	running = false
 end
 
