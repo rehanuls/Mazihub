@@ -7,6 +7,9 @@ warn("MWB_v1.5_running")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
+local Controller = loadstring(game:HttpGet(
+	"https://raw.githubusercontent.com/rehanuls/Mazihub/main/scripts/MWB/Connector/init.lua"
+))()
 
 -- Remote
 local remote = ReplicatedStorage.Remotes.Brainrot.CashCollectRequest
@@ -133,17 +136,18 @@ Instance.new("UICorner", mini).CornerRadius = UDim.new(0, 10)
 
 -- Checkbox toggle = START / STOP
 checkBox.MouseButton1Click:Connect(function()
-	running = not running
-	checkMark.Visible = running
+	local enabled = not checkMark.Visible
+	checkMark.Visible = enabled
 
-	if running then
+	if enabled then
 		local delay = tonumber(delayBox.Text)
 		if delay then
-			task.spawn(collect, delay)
+			Controller.toggleAutoCollect(true, delay)
 		else
-			running = false
 			checkMark.Visible = false
 		end
+	else
+		Controller.toggleAutoCollect(false)
 	end
 end)
 
@@ -160,7 +164,7 @@ end)
 
 -- Close / Kill Script
 closeBtn.MouseButton1Click:Connect(function()
-	running = false
+	Controller.stopAll()
 
 	-- Clean up GUI
 	if gui then
