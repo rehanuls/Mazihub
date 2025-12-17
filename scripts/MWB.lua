@@ -86,15 +86,15 @@ delayBox.Parent = frame
 -- Auto Collect Checkbox
 local checkBox = Instance.new("TextButton")
 checkBox.Size = UDim2.fromOffset(24, 24)
-checkBox.Position = UDim2.new(0, 10, 0, 125)
+checkBox.Position = UDim2.new(1, -34, 0, 125)
 checkBox.Text = ""
 checkBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 checkBox.Parent = frame
 Instance.new("UICorner", checkBox)
 
 local checkLabel = Instance.new("TextLabel")
-checkLabel.Size = UDim2.new(1, -50, 0, 24)
-checkLabel.Position = UDim2.new(0, 44, 0, 125)
+checkLabel.Size = UDim2.new(1, -60, 0, 24)
+checkLabel.Position = UDim2.new(0, 10, 0, 125)
 checkLabel.BackgroundTransparency = 1
 checkLabel.Text = "Auto Collect"
 checkLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
