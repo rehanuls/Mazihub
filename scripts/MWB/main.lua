@@ -131,19 +131,6 @@ mini.TextColor3 = Color3.fromRGB(180, 180, 180)
 mini.Parent = gui
 Instance.new("UICorner", mini).CornerRadius = UDim.new(0, 10)
 
--- Logic
-local running = false
-
-local function collect(delay)
-	while running do
-		for i = 1, 8 do
-			if not running then break end
-			remote:FireServer("Space" .. i)
-			task.wait(delay)
-		end
-	end
-end
-
 -- Checkbox toggle = START / STOP
 checkBox.MouseButton1Click:Connect(function()
 	running = not running
