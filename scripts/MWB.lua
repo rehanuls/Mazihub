@@ -34,8 +34,9 @@ Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
 
 -- Title
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -20, 0, 40)
-title.Position = UDim2.new(0, 10, 0, 5)
+title.Size = UDim2.new(1, -80, 0, 28)
+title.Position = UDim2.new(0, 10, 0, 6)
+title.TextSize = 16
 title.BackgroundTransparency = 1
 title.Text = "MWB Auto"
 title.TextColor3 = Color3.new(1, 1, 1)
@@ -45,8 +46,8 @@ title.Parent = frame
 
 -- Minimize Button
 local minimize = Instance.new("TextButton")
-minimize.Size = UDim2.fromOffset(30, 30)
-minimize.Position = UDim2.new(1, -70, 0, 8)
+minimize.Size = UDim2.fromOffset(26, 26)
+minimize.Position = UDim2.new(1, -60, 0, 6)
 minimize.Text = "-"
 minimize.TextScaled = true
 minimize.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
@@ -55,8 +56,8 @@ Instance.new("UICorner", minimize)
 
 -- Close Button (Kill Script)
 local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.fromOffset(30, 30)
-closeBtn.Position = UDim2.new(1, -35, 0, 8)
+closeBtn.Size = UDim2.fromOffset(26, 26)
+closeBtn.Position = UDim2.new(1, -30, 0, 6)
 closeBtn.Text = "×"
 closeBtn.TextScaled = true
 closeBtn.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
@@ -66,22 +67,25 @@ Instance.new("UICorner", closeBtn)
 
 -- Delay Label
 local delayLabel = Instance.new("TextLabel")
-delayLabel.Size = UDim2.new(1, -20, 0, 20)
+delayLabel.Size = UDim2.new(0, 60, 0, 26)
 delayLabel.Position = UDim2.new(0, 10, 0, 50)
 delayLabel.BackgroundTransparency = 1
-delayLabel.Text = "Delay /s"
-delayLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+delayLabel.Text = "Delay"
 delayLabel.TextScaled = true
+delayLabel.TextXAlignment = Enum.TextXAlignment.Left
+delayLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 delayLabel.Parent = frame
 
 -- Delay Box
 local delayBox = Instance.new("TextBox")
-delayBox.Size = UDim2.new(0.5, -15, 0, 36)
-delayBox.Position = UDim2.new(0, 10, 0, 70)
+delayBox.Size = UDim2.new(0, 80, 0, 26)
+delayBox.Position = UDim2.new(0, 75, 0, 50)
 delayBox.Text = "0.2"
-delayBox.ClearTextOnFocus = false
 delayBox.TextScaled = true
+delayBox.ClearTextOnFocus = false
 delayBox.Parent = frame
+
+Instance.new("UICorner", delayBox).CornerRadius = UDim.new(0, 8)
 
 -- Auto Collect Checkbox
 local checkBox = Instance.new("TextButton")
