@@ -20,15 +20,19 @@ local function openLoop()
 		for i = START_PLACE, END_PLACE do
 			if not running then return end
 
-			-- Attempt open
-			remote:FireServer("Place" .. i)
+			local placeName = "Place" .. i
 
-			-- Wait to avoid UI stacking
-			task.wait(OPEN_DELAY)
+			-- Fire open request
+			remote:FireServer(placeName)
+
+			-- IMPORTANT:
+			-- Only wait long if something likely opened
+			-- Empty places will be ignored instantly by server
+			task.wait(0.15)
 		end
 
-		-- small extra pause before next cycle
-		task.wait(1)
+		-- Small delay before rescanning all places
+		task.wait(0.5)
 	end
 end
 
