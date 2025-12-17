@@ -1,3 +1,5 @@
+-- MWB Auto v1
+-- By mazihub
 -- Services
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -107,18 +109,30 @@ stopBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
 stopBtn.Parent = frame
 Instance.new("UICorner", stopBtn)
 
--- Mini Button
+-- Mini Button (small executor-style icon)
 local mini = Instance.new("TextButton")
-mini.Size = UDim2.fromOffset(60, 60)
+mini.Size = UDim2.fromOffset(42, 42)
 mini.Position = UDim2.fromScale(0.1, 0.5)
 mini.Text = "MWB"
+mini.Font = Enum.Font.GothamBold
+mini.TextSize = 16
 mini.TextScaled = true
 mini.Visible = false
 mini.Active = true
 mini.Draggable = true
-mini.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+mini.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+mini.TextColor3 = Color3.fromRGB(180, 180, 180)
 mini.Parent = gui
-Instance.new("UICorner", mini)
+
+local miniCorner = Instance.new("UICorner")
+miniCorner.CornerRadius = UDim.new(0, 10)
+miniCorner.Parent = mini
+
+-- Optional executor-style outline
+local stroke = Instance.new("UIStroke")
+stroke.Thickness = 2
+stroke.Color = Color3.fromRGB(80, 170, 255)
+stroke.Parent = mini
 
 -- Logic
 local running = false
